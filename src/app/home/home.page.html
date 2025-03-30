@@ -1,0 +1,78 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Weather Application
+    </ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-searchbar (click)="presentPrompt()" placeholder="{{locationName}}"></ion-searchbar>
+    <ion-buttons slot="start">
+      <ion-avatar class="small-avatar">
+        <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+      </ion-avatar>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleUnits()">
+        {{ units === 'metric' ? '°F' : '°C' }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card *ngIf="currentWeather">
+    <ion-card-header>
+      <ion-card-title>Current Weather</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Temperature: {{ currentWeather.temp }} {{ getTempUnit() }}</p>
+      <p>Humidity: {{ currentWeather.humidity }}%</p>
+      <p>Wind Speed: {{ currentWeather.wind_speed }} m/s</p>
+      <p>Feels like: {{ currentWeather.feels_like }} {{ getTempUnit() }}</p>
+      <p>
+        Weather: {{ currentWeather.weather[0].description }}
+        <img [src]="getWeatherIcon(currentWeather.weather[0].icon)" alt="Weather Icon" />
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="dailyForecast">
+    <ion-card-header>
+      <ion-card-title>5-Day Forecast</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let day of dailyForecast">
+          <ion-label>
+            <h2>{{ dateFormat(day.dt) }}</h2>
+            <p>Temp: {{ day.temp.day }} {{ getTempUnit() }}</p>
+            <p>
+              {{ day.weather[0].description }}
+              <img [src]="getWeatherIcon(day.weather[0].icon)" alt="Weather Icon" />
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="hourlyForecast">
+    <ion-card-header>
+      <ion-card-title>Hourly Forecast</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let hour of hourlyForecast">
+          <ion-label>
+            <h2>{{ timeStamp(hour.dt) }}</h2>
+            <p>Temp: {{ hour.temp }} {{ getTempUnit() }}</p>
+            <p>
+              {{ hour.weather[0].description }}
+              <img [src]="getWeatherIcon(hour.weather[0].icon)" alt="Weather Icon" />
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
